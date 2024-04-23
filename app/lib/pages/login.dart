@@ -81,13 +81,13 @@ class LoginPage extends StatelessWidget {
                     'Or',
                     style: TextStyle(
                       fontSize: 16, // ปรับขนาดตัวอักษรที่ต้องการ
-                      color: Colors.blue, // ปรับสีตัวอักษรที่ต้องการ
+                      color: Color.fromARGB(255, 0, 0, 0), // ปรับสีตัวอักษรที่ต้องการ
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   ElevatedButton(
                     onPressed: () => _handleSignUp(context),
-                    child: const Text('Sign UP'),
+                    child: const Text('SIGN UP'),
                   ),
                 ],
               ),

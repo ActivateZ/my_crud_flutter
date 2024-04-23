@@ -16,6 +16,14 @@ class CreatePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Sign Up'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => _handleBack(context),
+        ),
+        ),
       body: Stack(
         children: [
           // Background image
@@ -36,7 +44,7 @@ class CreatePage extends StatelessWidget {
               // Set a smaller size for the login container
               constraints: const BoxConstraints(
                 maxWidth: 300, // Adjust width as needed
-                maxHeight: 400, // Adjust height as needed
+                maxHeight: 600, // Adjust height as needed
               ),
               decoration: const BoxDecoration(
                 color: Colors.white, // Set container background color to white
@@ -49,7 +57,7 @@ class CreatePage extends StatelessWidget {
                     MainAxisAlignment.center, // Center content vertically
                 children: [
                   const Text(
-                    "Sign Up",
+                    "ICON",
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -58,7 +66,7 @@ class CreatePage extends StatelessWidget {
                   const SizedBox(height: 10),
                   const TextField(
                     decoration: InputDecoration(
-                      hintText: "Enter Username",
+                      hintText: "Enter nsername",
                       labelText: "Username",
                     ),
                   ),
@@ -70,16 +78,10 @@ class CreatePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => _handleBack(context),
-                    child: const Text('Back'),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Or',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue,
+                  const TextField(
+                    decoration: InputDecoration(
+                      hintText: "Enter nickname",
+                      labelText: "Nickname",
                     ),
                   ),
                   const SizedBox(height: 10),
