@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-
 void _handleLogin(BuildContext context) {
-  Navigator.pushNamed(context, '/user');
+  Navigator.pushNamed(context, '/alluser');
   print('Login button pressed');
 }
 
@@ -16,10 +15,14 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
         title: const Text('CRUD'),
+        backgroundColor: Colors.purple,
+        elevation: 4.0,
         ),
+        
       body: Stack(
         children: [
           // Background image

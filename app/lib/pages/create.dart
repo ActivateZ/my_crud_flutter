@@ -6,7 +6,7 @@ void _handleBack(BuildContext context) {
 }
 
 void _handleSignUp(BuildContext context) {
- Navigator.pushNamed(context, '/user');
+ Navigator.pushNamed(context, '/alluser');
  print('Sign up button pressed');
 }
 
@@ -16,7 +16,14 @@ class CreatePage extends StatelessWidget {
  @override
  Widget build(BuildContext context) {
    return Scaffold(
-     appBar: _buildAppBar(context),
+     appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Sign Up'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => _handleBack(context),
+        ),
+        ),
      body: Stack(
        children: [
          // Background image
@@ -86,17 +93,6 @@ class CreatePage extends StatelessWidget {
            ),
          ),
        ],
-     ),
-   );
- }
-
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-   return AppBar(
-     centerTitle: true,
-     title: const Text('Sign Up'),
-     leading: IconButton(
-       icon: const Icon(Icons.arrow_back),
-       onPressed: () => _handleBack(context),
      ),
    );
  }

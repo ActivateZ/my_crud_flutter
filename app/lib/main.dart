@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/login.dart';
 import 'package:flutter_application_1/pages/create.dart';
 import 'package:flutter_application_1/pages/alluser.dart';
+import 'package:flutter_application_1/pages/user.dart';
 
 
 void main() {
@@ -15,12 +16,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(),
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+      ),
       home: const LoginPage(),
       routes: {
         '/login':(context) => const LoginPage(),
         '/createpage':(context) => const CreatePage(),
-        '/user':(context) => const AlluserPage()
+        '/alluser':(context) => const AlluserPage(),
+        '/user':(context) => const UserPage()
       },
     );
   }
