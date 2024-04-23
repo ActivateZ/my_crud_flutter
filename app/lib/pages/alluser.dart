@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void _handleBack(BuildContext context) {
-  Navigator.pushNamed(context, '/login');
+  Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   print('Back button pressed');
 }
 

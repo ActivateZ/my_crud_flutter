@@ -17,6 +17,9 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+        title: const Text('CRUD'),
+        ),
       body: Stack(
         children: [
           // Background image
@@ -59,8 +62,8 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 10),
                   const TextField(
                     decoration: InputDecoration(
-                      hintText: "Enter email",
-                      labelText: "Email",
+                      hintText: "Enter username",
+                      labelText: "Username",
                     ),
                   ),
                   const SizedBox(height: 10),
