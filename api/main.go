@@ -3,7 +3,6 @@ package main
 import (
 	AuthController "chaitham/jwt-api/controller/auth"
 	UserController "chaitham/jwt-api/controller/user"
-	"chaitham/jwt-api/middleware"
 	"chaitham/jwt-api/orm"
 	"fmt"
 
@@ -28,12 +27,11 @@ func main() {
 	r.Use(cors.New(corsConfig))
 
 	r.POST("/login", AuthController.Login)
-	authorized := r.Group("/jwt", middleware.JWTAuthen())
 	r.POST("/users", AuthController.Register)
-	authorized.GET("/users", UserController.ReadAll)
-	authorized.GET("/users/:id", UserController.Profile)
-	authorized.PUT("/users/:id", UserController.Update)
-	authorized.DELETE("/users/:id", UserController.Delete)
+	r.GET("/users", UserController.ReadAll)
+	r.GET("/users/:id", UserController.Profile)
+	r.PUT("/users/:id", UserController.Update)
+	r.DELETE("/users/:id", UserController.Delete)
 
 	r.Run("localhost:8080")
 }

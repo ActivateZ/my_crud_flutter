@@ -24,7 +24,7 @@ func Register(c *gin.Context) {
 	var userExist orm.User
 	orm.Db.Where("username = ?", json.Username).First(&userExist)
 	if userExist.ID > 0 {
-		c.JSON(http.StatusOK, gin.H{"status": "error", "message": "User Exists"})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": "User Exists"})
 		return
 	}
 	// Create User
