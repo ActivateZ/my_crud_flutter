@@ -34,7 +34,7 @@ func Register(c *gin.Context) {
 	if user.ID > 0 {
 		c.JSON(http.StatusOK, gin.H{"status": "ok", "message": "User Create Success", "id": user.ID})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"status": "error", "message": "User Create Failed"})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": "User Create Failed"})
 	}
 }
 

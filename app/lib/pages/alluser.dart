@@ -11,6 +11,7 @@ class AllzUser extends StatefulWidget {
 }
 
 class _AllzUserState extends State<AllzUser> {
+  bool _obscurePassword = true;
   int? editingIndex;
   bool isAdding = false;
   bool isEditing = false;
@@ -79,12 +80,26 @@ class _AllzUserState extends State<AllzUser> {
                         const SizedBox(height: 10),
                         TextField(
                           controller: passwordController,
-                          decoration: const InputDecoration(
-                              hintText: "Password",
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ))),
+                          obscureText:
+                              _obscurePassword, // Set this to a state variable
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            )),
+                            suffixIcon: IconButton(
+                              icon: Icon(_obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword =
+                                      !_obscurePassword; // Toggle the visibility state
+                                });
+                              },
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 10),
                         TextField(
@@ -127,8 +142,23 @@ class _AllzUserState extends State<AllzUser> {
                                   // Call the API again to refresh the data
                                   callAPIandAssignData();
                                 } else {
-                                  // Handle the error case
-                                  print('Error: ${response.statusCode}');
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Empty'),
+                                        content:
+                                            Text('Plese fill in all fields.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            child: Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 }
                               },
                               child: const Text('Create'),
@@ -166,33 +196,55 @@ class _AllzUserState extends State<AllzUser> {
                           children: [
                             ElevatedButton(
                               onPressed: () async {
-                                final index = editingIndex!;
-                                final user = allUser.users[index];
+                                final index = editingIndex;
+                                final nickname = nicknameController.text.trim();
 
-                                final nickname = nicknameController.text;
+                                // Check if the index and nickname are not empty
+                                if (index != null && nickname.isNotEmpty) {
+                                  final user = allUser.users[index];
+                                  final response = await http.put(
+                                    Uri.parse(
+                                        'http://localhost:8080/users/${user.id}'),
+                                    headers: <String, String>{
+                                      'Content-Type':
+                                          'application/json; charset=UTF-8',
+                                    },
+                                    body: jsonEncode(<String, String>{
+                                      'nickname': nickname,
+                                    }),
+                                  );
 
-                                final response = await http.put(
-                                  Uri.parse(
-                                      'http://localhost:8080/users/${user.id}'),
-                                  headers: <String, String>{
-                                    'Content-Type':
-                                        'application/json; charset=UTF-8',
-                                  },
-                                  body: jsonEncode(<String, String>{
-                                    'nickname': nickname,
-                                  }),
-                                );
-
-                                if (response.statusCode == 200) {
-                                  // User updated successfully
-                                  usernameController.clear();
-                                  nicknameController.clear();
-                                  editingIndex = null;
-                                  // Call the API again to refresh the data
-                                  callAPIandAssignData();
+                                  if (response.statusCode == 200) {
+                                    // User updated successfully
+                                    usernameController.clear();
+                                    nicknameController.clear();
+                                    editingIndex = null;
+                                    // Call the API again to refresh the data
+                                    callAPIandAssignData();
+                                  } else {
+                                    // Handle the error case
+                                    print('Error: ${response.statusCode}');
+                                  }
                                 } else {
-                                  // Handle the error case
-                                  print('Error: ${response.statusCode}');
+                                  // Show an alert dialog if the index or nickname is empty
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Invalid Input'),
+                                        content: Text(index == null
+                                            ? 'Please select a user to edit.'
+                                            : 'Please enter a nickname.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            child: Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 }
                               },
                               child: const Text('Update'),

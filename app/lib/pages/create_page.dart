@@ -14,10 +14,11 @@ class _CreateStateState extends State<CreateState> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController nicknameController = TextEditingController();
+  bool _obscurePassword = true;
 
-  Future<void> createUser(
+  Future<http.Response> createUser(
       String username, String password, String nickname) async {
-    final url = Uri.parse('http://localhost:8080//users/:id');
+    final url = Uri.parse('http://localhost:8080/users');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
       'username': username,
@@ -28,16 +29,11 @@ class _CreateStateState extends State<CreateState> {
     try {
       final response = await http.post(url, headers: headers, body: body);
 
-      if (response.statusCode == 200) {
-        // User created successfully
-        print('User created successfully');
-      } else {
-        // Handle error
-        print('Error creating user: ${response.body}');
-      }
+      return response;
     } catch (e) {
       // Handle exception
       print('Exception: $e');
+      rethrow;
     }
   }
 
@@ -65,12 +61,25 @@ class _CreateStateState extends State<CreateState> {
             const SizedBox(height: 10),
             TextField(
               controller: passwordController,
-              decoration: const InputDecoration(
-                  hintText: "Password",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ))),
+              obscureText: _obscurePassword, // Set this to a state variable
+              decoration: InputDecoration(
+                hintText: "Password",
+                border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                )),
+                suffixIcon: IconButton(
+                  icon: Icon(_obscurePassword
+                      ? Icons.visibility
+                      : Icons.visibility_off),
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword =
+                          !_obscurePassword; // Toggle the visibility state
+                    });
+                  },
+                ),
+              ),
             ),
             const SizedBox(height: 10),
             TextField(
@@ -87,12 +96,53 @@ class _CreateStateState extends State<CreateState> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     final username = usernameController.text;
                     final password = passwordController.text;
                     final nickname = nicknameController.text;
 
-                    createUser(username, password, nickname);
+                    if (username.isNotEmpty &&
+                        password.isNotEmpty &&
+                        nickname.isNotEmpty) {
+                      final response =
+                          await createUser(username, password, nickname);
+                      if (response.statusCode == 200) {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/login',
+                          (route) => false,
+                        );
+                      } else {
+                        usernameController.clear();
+                        passwordController.clear();
+                        nicknameController.clear();
+
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: const Text('Error'),
+                                  content: const Text('Fail to create user'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('OK'))
+                                  ],
+                                ));
+                      }
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: const Text('Error'),
+                                content:
+                                    const Text('Plese fill in all fields.'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('OK'))
+                                ],
+                              ));
+                    }
                   },
                   child: const Text('Sign Up'),
                 ),
